@@ -1,0 +1,53 @@
+import SwiftUI
+
+struct RefractingGlassView: View {
+
+    @State private var glassPosition: CGPoint = .init(x: 150, y: 200)
+    @State private var radius: Float = 0.15
+    @State private var refraction: Float = 1.0
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Spacer()
+
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .foregroundStyle(.black)
+                    .padding()
+
+                Text("Glass")
+                    .font(.system(size: 82))
+                    .foregroundStyle(.white)
+                    .bold()
+            }
+            .aspectRatio(1, contentMode: .fit)
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { glassPosition = $0.location }
+            )
+
+            // Controls
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Radius")
+                        .font(.caption)
+                    Slider(value: $radius, in: 0...0.5)
+                }
+
+                HStack {
+                    Text("Refraction")
+                        .font(.caption)
+                    Slider(value: $refraction, in: 0...2)
+                }
+            }
+            .padding()
+
+            Spacer()
+        }
+        .background(Color.white)
+    }
+}
+
+#Preview {
+    RefractingGlassView()
+}
