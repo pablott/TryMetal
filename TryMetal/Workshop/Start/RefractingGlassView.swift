@@ -21,6 +21,24 @@ struct RefractingGlassView: View {
                     .bold()
             }
             .aspectRatio(1, contentMode: .fit)
+            .visualEffect { [radius, refraction, glassPosition] content, proxy in
+                let normalizedPosition = CGPoint(
+                    x: glassPosition.x / proxy.size.width,
+                    y: glassPosition.y / proxy.size.height
+                )
+                
+                return content
+                    .layerEffect(
+                        ShaderLibrary.glassCircle(
+                            .float2(proxy.size),
+                            .float2(normalizedPosition.x,
+                                    normalizedPosition.y),
+                            .float(radius),
+                            .float(refraction)
+                        ), maxSampleOffset: .init(width: 150, height: 150)
+                        
+                    )
+            }
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { glassPosition = $0.location }

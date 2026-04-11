@@ -11,20 +11,7 @@ struct WaveDistortionView: View {
     var body: some View {
         VStack(spacing: 0) {
             TimelineView(.animation) { context in
-                let time = Float(context.date.timeIntervalSince(touchTime))
-
-                Image(.samplePhoto)
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(.rect(cornerRadius: 12))
-                    .padding()
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                touchPosition = value.location
-                                touchTime = .now
-                            }
-                    )
+                distortedImage(time: Float(context.date.timeIntervalSince(touchTime)))
             }
 
             Spacer()
@@ -85,6 +72,36 @@ struct WaveDistortionView: View {
             Spacer()
         }
         .background(Color.black)
+    }
+
+    private func distortedImage(time: Float) -> some View {
+        Image(.samplePhoto)
+            .resizable()
+            .scaledToFit()
+            .clipShape(.rect(cornerRadius: 12))
+            .padding()
+            .visualEffect { [touchPosition, amplitude, frequency, damping] content, geo in
+                content.distortionEffect(
+
+                    ShaderLibrary.jelly(
+                        .float2(geo.size.width, geo.size.height),
+                        .float(time),
+                        .float2(touchPosition.x, touchPosition.y),
+                        .float(amplitude),
+                        .float(frequency),
+                        .float(damping),
+                        .float(0)  // 0 = compress, 1 = expand
+                    ), maxSampleOffset: CGSize(width: 60, height: 60)
+
+                )
+            }
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        touchPosition = value.location
+                        touchTime = .now
+                    }
+            )
     }
 }
 
