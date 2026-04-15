@@ -28,6 +28,7 @@ struct RefractingGlassView: View {
                 )
                 
                 return content
+                // layerEffect passes the whole layer, colorEffect passes the pixel
                     .layerEffect(
                         ShaderLibrary.glassCircle(
                             .float2(proxy.size),

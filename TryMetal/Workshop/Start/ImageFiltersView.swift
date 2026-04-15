@@ -13,6 +13,9 @@ struct ImageFiltersView: View {
                 .scaledToFit()
                 .clipShape(.rect(cornerRadius: 12))
                 .padding()
+                .colorEffect(ShaderLibrary.hsb( // filters()
+                    .float(amount)
+                ))
 
             Spacer()
                 .frame(height: 16)

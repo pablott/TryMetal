@@ -81,6 +81,7 @@ struct WaveDistortionView: View {
             .clipShape(.rect(cornerRadius: 12))
             .padding()
             .visualEffect { [touchPosition, amplitude, frequency, damping] content, geo in
+                // distortionEffect expects a float2 position return
                 content.distortionEffect(
 
                     ShaderLibrary.jelly(
